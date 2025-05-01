@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthMate – ЗОЖ ассистент</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap">
+  <style>
+    body {
+      font-family: 'Rubik', sans-serif;
+      background: linear-gradient(to right, #f0f9ff, #d9f1e2);
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ffffffcc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    header img {
+      height: 60px;
+    }
+    .lang-switcher {
+      font-size: 14px;
+    }
+    .container {
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 48px;
+      color: #00796b;
+    }
+    p {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+    .illustration {
+      max-width: 600px;
+      max-height: 400px;
+      width: auto;
+      height: auto;
+      margin: 0 auto 40px auto;
+      display: block;
+      object-fit: cover;
+    }
+    .query-box {
+      margin-top: 20px;
+    }
+    .query-box input {
+      padding: 10px;
+      width: 60%;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .query-box button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .response {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #004d40;
+      background-color: #e0f2f1;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEUAAAD///8AAADg4OC9vb0fHx9wcHBgYGBlZWUoKCh/f3/6+vrc3NzPz8+jo6Opqan4+Pi2trZkZGTq6ur09PSmpqafn5/ExMT7+/vT09Pd3d0pKSlhYWFeXl5TU1OhoaHg4ODR0dFGUba3AAABN0lEQVR4nO3bSxaCMBBA0fGStYX7n/+4LSPjTpVKU9NmfeXMKiAAQIECBAgQIDAv4J+bRckbq42NYfD+p4vQ4efhzlL5I4ec9DBw+6uRHHb9B9OcU+cbM45+WZmuBLj9DFfeW4NvpMR16K/FY0F0bXk9cFw86JbgvuazwWYLn0A07s1XKxS3kbCft48Y0rj90EK6+oO3a5bnFgc+1fdh8X31X5G1Y/7/A2L+mnsLLWg+x/UeC2C1s0lvhLU5S3thLU5R3tiLUZQXtxLUZRTtxLU5RTthLUZRbtxLUZQ7tB+f4AyPMgVqkAAAAASUVORK5CYII=" alt="HealthMate Logo" />
+    <div class="lang-switcher">
+      <select>
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+  </header>
+  <div class="container">
+    <h1>Добро пожаловать в HealthMate</h1>
+    <p>Ваш персональный помощник по здоровому образу жизни и благополучию.</p>
+    <img class="illustration" src="https://images.unsplash.com/photo-1540206395-68808572332f" alt="Healthy Lifestyle" />
+    <div class="query-box">
+      <input type="text" placeholder="Введите ваш вопрос..." />
+      <button>Спросить</button>
+    </div>
+    <div class="response" id="responseBox">
+      Ответ появится здесь.
+    </div>
+  </div>
+</body>
+</html>
