@@ -35,7 +35,7 @@
       font-size: 48px;
       color: #00796b;
     }
-    p {
+    p.description {
       font-size: 20px;
       margin-bottom: 30px;
     }
@@ -76,6 +76,10 @@
       padding: 20px;
       border-radius: 10px;
       display: none;
+      text-align: left;
+      max-width: 60%;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
@@ -83,86 +87,90 @@
   <header>
     <img src="logo.png" alt="HealthMate Logo" />
     <div class="lang-switcher">
-      <select id="languageSwitcher" onchange="changeLanguage()">
+      <select id="langSelect">
         <option value="ru">Русский</option>
         <option value="en">English</option>
       </select>
     </div>
   </header>
   <div class="container">
-    <h1 id="mainTitle">Добро пожаловать в HealthMate</h1>
-    <p id="description">Ваш персональный помощник по здоровому образу жизни и благополучию.</p>
+    <h1 id="title">Добро пожаловать в HealthMate</h1>
+    <p class="description" id="description">Ваш персональный помощник по здоровому образу жизни и благополучию.</p>
     <img class="illustration" src="https://images.unsplash.com/photo-1540206395-68808572332f" alt="Healthy Lifestyle" />
     <div class="query-box">
-      <input type="text" id="userQuery" placeholder="Введите ваш вопрос..." />
-      <button onclick="askQuestion()" id="askButton">Спросить</button>
+      <input type="text" id="userInput" placeholder="Введите ваш вопрос..." />
+      <button id="askBtn">Спросить</button>
     </div>
-    <div class="response" id="responseBox">
-      Ответ появится здесь.
-    </div>
+    <div class="response" id="responseBox"></div>
   </div>
-  <script>
-    const API_KEY = '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';
 
-    const translations = {
+  <script>
+    // Ваш OpenAI ключ (для продакшена перенесите на сервер или защищённый бэкенд!)
+    const OPENAI_API_KEY = 'sk-...';
+
+    const langSelect = document.getElementById('langSelect');
+    const title = document.getElementById('title');
+    const description = document.getElementById('description');
+    const askBtn = document.getElementById('askBtn');
+    const userInput = document.getElementById('userInput');
+    const responseBox = document.getElementById('responseBox');
+
+    const texts = {
       ru: {
-        mainTitle: 'Добро пожаловать в HealthMate',
+        title: 'Добро пожаловать в HealthMate',
         description: 'Ваш персональный помощник по здоровому образу жизни и благополучию.',
         placeholder: 'Введите ваш вопрос...',
-        buttonText: 'Спросить',
-        responseText: 'Ответ появится здесь.'
+        button: 'Спросить',
       },
       en: {
-        mainTitle: 'Welcome to HealthMate',
+        title: 'Welcome to HealthMate',
         description: 'Your personal assistant for a healthy lifestyle and well-being.',
-        placeholder: 'Enter your question...',
-        buttonText: 'Ask',
-        responseText: 'The answer will appear here.'
+        placeholder: 'Type your question...',
+        button: 'Ask',
       }
     };
 
-    function changeLanguage() {
-      const lang = document.getElementById('languageSwitcher').value;
-      document.getElementById('mainTitle').innerText = translations[lang].mainTitle;
-      document.getElementById('description').innerText = translations[lang].description;
-      document.getElementById('userQuery').placeholder = translations[lang].placeholder;
-      document.getElementById('askButton').innerText = translations[lang].buttonText;
-      document.getElementById('responseBox').innerText = translations[lang].responseText;
-    }
+    // Переключение языка интерфейса
+    langSelect.addEventListener('change', () => {
+      const lang = langSelect.value;
+      title.textContent = texts[lang].title;
+      description.textContent = texts[lang].description;
+      userInput.placeholder = texts[lang].placeholder;
+      askBtn.textContent = texts[lang].button;
+      responseBox.style.display = 'none';
+    });
 
-    async function askQuestion() {
-      const userQuery = document.getElementById('userQuery').value;
-      if (!userQuery) {
-        alert('Пожалуйста, введите вопрос!');
-        return;
-      }
-      document.getElementById('responseBox').style.display = 'block';
-      document.getElementById('responseBox').innerText = 'Загрузка ответа...';
+    // Обработка клика кнопки
+    askBtn.addEventListener('click', async () => {
+      const prompt = userInput.value.trim();
+      if (!prompt) return;
+      responseBox.textContent = 'Отправка запроса...';
+      responseBox.style.display = 'block';
 
       try {
         const res = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${API_KEY}`
+            'Authorization': `Bearer ${OPENAI_API_KEY}`
           },
           body: JSON.stringify({
             model: 'gpt-3.5-turbo',
             messages: [
               { role: 'system', content: 'You are a helpful assistant.' },
-              { role: 'user', content: userQuery }
+              { role: 'user', content: prompt }
             ]
           })
         });
         const data = await res.json();
-        const answer = data.choices[0].message.content.trim();
-        document.getElementById('responseBox').innerText = answer;
-      } catch (error) {
-        document.getElementById('responseBox').innerText = 'Ошибка при получении ответа.';
-        console.error(error);
+        const answer = data.choices?.[0]?.message?.content || 'Нет ответа.';
+        responseBox.textContent = answer;
+      } catch (err) {
+        responseBox.textContent = 'Ошибка при получении ответа.';
       }
-    }
+    });
   </script>
 </body>
 </html>
+
 
