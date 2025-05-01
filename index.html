@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -82,25 +81,88 @@
 </head>
 <body>
   <header>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEUAAAD///8AAADg4OC9vb0fHx9wcHBgYGBlZWUoKCh/f3/6+vrc3NzPz8+jo6Opqan4+Pi2trZkZGTq6ur09PSmpqafn5/ExMT7+/vT09Pd3d0pKSlhYWFeXl5TU1OhoaHg4ODR0dFGUba3AAABN0lEQVR4nO3bSxaCMBBA0fGStYX7n/+4LSPjTpVKU9NmfeXMKiAAQIECBAgQIDAv4J+bRckbq42NYfD+p4vQ4efhzlL5I4ec9DBw+6uRHHb9B9OcU+cbM45+WZmuBLj9DFfeW4NvpMR16K/FY0F0bXk9cFw86JbgvuazwWYLn0A07s1XKxS3kbCft48Y0rj90EK6+oO3a5bnFgc+1fdh8X31X5G1Y/7/A2L+mnsLLWg+x/UeC2C1s0lvhLU5S3thLU5R3tiLUZQXtxLUZRTtxLU5RTthLUZRbtxLUZQ7tB+f4AyPMgVqkAAAAASUVORK5CYII=" alt="HealthMate Logo" />
+    <img src="logo.png" alt="HealthMate Logo" />
     <div class="lang-switcher">
-      <select>
+      <select id="languageSwitcher" onchange="changeLanguage()">
         <option value="ru">Русский</option>
         <option value="en">English</option>
       </select>
     </div>
   </header>
   <div class="container">
-    <h1>Добро пожаловать в HealthMate</h1>
-    <p>Ваш персональный помощник по здоровому образу жизни и благополучию.</p>
+    <h1 id="mainTitle">Добро пожаловать в HealthMate</h1>
+    <p id="description">Ваш персональный помощник по здоровому образу жизни и благополучию.</p>
     <img class="illustration" src="https://images.unsplash.com/photo-1540206395-68808572332f" alt="Healthy Lifestyle" />
     <div class="query-box">
-      <input type="text" placeholder="Введите ваш вопрос..." />
-      <button>Спросить</button>
+      <input type="text" id="userQuery" placeholder="Введите ваш вопрос..." />
+      <button onclick="askQuestion()" id="askButton">Спросить</button>
     </div>
     <div class="response" id="responseBox">
       Ответ появится здесь.
     </div>
   </div>
+  <script>
+    const API_KEY = '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';
+
+    const translations = {
+      ru: {
+        mainTitle: 'Добро пожаловать в HealthMate',
+        description: 'Ваш персональный помощник по здоровому образу жизни и благополучию.',
+        placeholder: 'Введите ваш вопрос...',
+        buttonText: 'Спросить',
+        responseText: 'Ответ появится здесь.'
+      },
+      en: {
+        mainTitle: 'Welcome to HealthMate',
+        description: 'Your personal assistant for a healthy lifestyle and well-being.',
+        placeholder: 'Enter your question...',
+        buttonText: 'Ask',
+        responseText: 'The answer will appear here.'
+      }
+    };
+
+    function changeLanguage() {
+      const lang = document.getElementById('languageSwitcher').value;
+      document.getElementById('mainTitle').innerText = translations[lang].mainTitle;
+      document.getElementById('description').innerText = translations[lang].description;
+      document.getElementById('userQuery').placeholder = translations[lang].placeholder;
+      document.getElementById('askButton').innerText = translations[lang].buttonText;
+      document.getElementById('responseBox').innerText = translations[lang].responseText;
+    }
+
+    async function askQuestion() {
+      const userQuery = document.getElementById('userQuery').value;
+      if (!userQuery) {
+        alert('Пожалуйста, введите вопрос!');
+        return;
+      }
+      document.getElementById('responseBox').style.display = 'block';
+      document.getElementById('responseBox').innerText = 'Загрузка ответа...';
+
+      try {
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              { role: 'system', content: 'You are a helpful assistant.' },
+              { role: 'user', content: userQuery }
+            ]
+          })
+        });
+        const data = await res.json();
+        const answer = data.choices[0].message.content.trim();
+        document.getElementById('responseBox').innerText = answer;
+      } catch (error) {
+        document.getElementById('responseBox').innerText = 'Ошибка при получении ответа.';
+        console.error(error);
+      }
+    }
+  </script>
 </body>
 </html>
+
